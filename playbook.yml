@@ -1,0 +1,44 @@
+- name: hexlet-devops-project-2
+  hosts: all
+  # become: yes
+
+  vars:
+    pip_install_packages:
+      - name: docker
+
+  roles:
+    - geerlingguy.pip
+    - geerlingguy.docker
+
+- name: setup pip & docker
+  hosts: all
+  become: true
+
+  tasks:
+    - name: apt update
+      ansible.builtin.apt:
+        update_cache: true
+      tags: setup
+
+    - name: install pip
+      ansible.builtin.import_role:
+        name: geerlingguy.pip
+      tags: setup
+
+    - name: pip install docker
+      ansible.builtin.pip:
+        name: docker
+        state: present
+      tags: setup
+
+    - name: install docker
+      ansible.builtin.import_role:
+        name: geerlingguy.docker
+      tags: setup
+
+    - name: check docker version
+      ansible.builtin.command: docker --version
+      register: docker_check
+      failed_when: docker_check.rc != 0
+      changed_when: false
+      tags: setup
