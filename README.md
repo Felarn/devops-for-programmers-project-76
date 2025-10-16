@@ -38,7 +38,7 @@ pip3 install docker ansible-vault
 make install-ansible-requirements
 ```
 
-### setup secrets
+### Setup secrets
 
 Create config files from templates using the following command:
 
