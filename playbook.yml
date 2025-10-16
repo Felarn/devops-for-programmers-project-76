@@ -82,3 +82,30 @@
         state: started
         detach: true
       tags: redmine
+
+- name: Setup DataDog
+  hosts: webservers
+  become: true
+
+  tasks:
+    - name: Import the Datadog Agent role
+      ansible.builtin.import_role:
+        name: datadog.dd.agent
+      tags: datadog
+
+    - name: copy HTTP_check
+      ansible.builtin.template:
+        src: templates/http_check-template.yml
+        dest: /etc/datadog-agent/conf.d/http_check.d/redmine.yaml
+        owner: dd-agent
+        group: dd-agent
+        mode: '0644'
+      notify: restart datadog-agent
+      tags: datadog
+
+    - name: start datadog-agent
+      ansible.builtin.service:
+        name: datadog-agent
+        state: restarted
+        enabled: true
+      tags: datadog

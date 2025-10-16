@@ -30,5 +30,5 @@ sudo apt-get install -y ansible python3-pip
 
 pip3 install docker ansible-vault
 
-make install-ansible-roles
+make install-ansible-requirements
 ```

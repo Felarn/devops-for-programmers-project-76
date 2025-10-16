@@ -1,4 +1,4 @@
-install-ansible-roles:
+install-ansible-requirements:
 	ansible-galaxy install -r requirements.yml
 
 copy-templates:
@@ -11,6 +11,9 @@ setup:
 
 redmine:
 	ansible-playbook -i inventory.ini playbook.yml --vault-password-file vault-key --tags redmine
+
+datadog:
+	ansible-playbook -i inventory.ini playbook.yml --vault-password-file vault-key --tags datadog
 
 deploy:
 	ansible-playbook -i inventory.ini playbook.yml --vault-password-file vault-key
