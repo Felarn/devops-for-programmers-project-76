@@ -1,30 +1,30 @@
-- name: setup pip & docker
+- name: Setup pip & docker
   hosts: all
   become: true
 
   tasks:
-    - name: apt update
+    - name: Apt update
       ansible.builtin.apt:
         update_cache: true
       tags: setup
 
-    - name: install pip
+    - name: Install pip
       ansible.builtin.import_role:
         name: geerlingguy.pip
       tags: setup
 
-    - name: pip install docker
+    - name: Pip install docker
       ansible.builtin.pip:
         name: docker
         state: present
       tags: setup
 
-    - name: install docker
+    - name: Install docker
       ansible.builtin.import_role:
         name: geerlingguy.docker
       tags: setup
 
-    - name: check docker version
+    - name: Check docker version
       ansible.builtin.command: docker --version
       register: docker_check
       failed_when: docker_check.rc != 0
@@ -36,14 +36,14 @@
   become: true
 
   tasks:
-    - name: create redmine directory
+    - name: Create redmine directory
       ansible.builtin.file:
         path: '/opt/redmine'
         state: directory
         mode: '0755'
       tags: redmine
 
-    - name: copy redmine.env file
+    - name: Copy redmine.env file
       ansible.builtin.template:
         src: templates/redmine.env
         dest: '/opt/redmine/.env'
@@ -81,7 +81,7 @@
         name: datadog.dd.agent
       tags: datadog
 
-    - name: copy HTTP_check
+    - name: Copy HTTP_check
       ansible.builtin.template:
         src: templates/http_check-template.yml
         dest: /etc/datadog-agent/conf.d/http_check.d/redmine.yaml
@@ -91,7 +91,7 @@
       notify: restart datadog-agent
       tags: datadog
 
-    - name: start datadog-agent
+    - name: Start datadog-agent
       ansible.builtin.service:
         name: datadog-agent
         state: restarted
